@@ -58,7 +58,7 @@ chart = (
                 domain=order,
                 scheme="blues"
             ),
-            title="Host Size Group"
+            title="Host Portfolio Size"
         ),
         order=alt.Order(
             "host_size_order:Q",
