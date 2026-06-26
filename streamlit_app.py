@@ -2,7 +2,7 @@ import streamlit as st
 import altair as alt
 import pandas as pd
 
-st.set_page_config(page_title="Riga AirBnb Dashboard", layout="wide")
+st.set_page_config(page_title="Riga AirBnb Dashboard", layout="centered")
 st.title("Breakdown of Riga's AirBnB Listings")
 
 @st.cache_data
@@ -40,6 +40,23 @@ neigh_context = {
 
 plot_df["neighborhood_context"] = plot_df["neighbourhood_cleansed"].map(neigh_context)
 
+view_mode = st.radio(
+    "View mode",
+    ["Count", "Percentage"],
+    horizontal=True
+)
+
+y_encoding = (
+    alt.Y("count():Q", title="Number of Listings")
+    if view_mode == "Count"
+    else alt.Y(
+        "count():Q",
+        stack="normalize",
+        title="Share of Listings",
+        axis=alt.Axis(format="%")
+    )
+)
+
 st.write("**Number of Listings by Neighborhood and Host Size**")
 
 chart = (
@@ -51,7 +68,7 @@ chart = (
             title="Neighborhood (Top 5)",
             sort=neigh_order
         ),
-        y=alt.Y("count():Q", title="Number of Listings"),
+        y=y_encoding,
         color=alt.Color(
             "host_size_group:O",
             scale=alt.Scale(
@@ -73,7 +90,7 @@ chart = (
     )
     .properties(
         width=700,
-        height=700
+        height=500
     )
 )
 
