@@ -244,8 +244,8 @@ chart3 = (
     .encode(
         x=alt.X(
             "host_size_group:O",
-            sort=order,
-            title="Host Portfolio Size"
+            sort=order
+            # title="Host Portfolio Size"
         ),
         y=alt.Y(
             "price_$:Q",
