@@ -239,7 +239,7 @@ chart2 = (
 
 chart3 = (
     alt.Chart(plot_df)
-    .mark_boxplot(size=45)
+    .mark_boxplot(size=45, tooltip=False)
     .transform_filter(neighborhood_click)
     .encode(
         x=alt.X(
