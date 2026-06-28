@@ -212,8 +212,14 @@ chart2 = (
             )
         ),
         tooltip=[
-            "host_size_group",
-            "host_is_superhost",
+            alt.Tooltip(
+                "host_size_group:N",
+                title="Host Portfolio Size"
+            ),
+            alt.Tooltip(
+                "host_is_superhost:N",
+                title="Superhost Status"
+            ),
             alt.Tooltip(
                 "count()",
                 title="Listings"
@@ -254,7 +260,6 @@ chart3 = (
             )
         ),
         tooltip=[
-            "host_size_group",
             alt.Tooltip(
                 "price_$:Q",
                 title="Price"
