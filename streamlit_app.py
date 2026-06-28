@@ -2,9 +2,12 @@ import streamlit as st
 import altair as alt
 import pandas as pd
 
-st.set_page_config(page_title="Riga AirBnB Dashboard", layout="centered")
-st.title("Breakdown of Riga's AirBnB Listings")
-
+st.set_page_config(page_title="Riga Airbnb Dashboard", layout="centered")
+st.title("Exploring Riga's Airbnb Market")
+st.write(
+    "Explore how Airbnb listings in Riga vary across neighborhoods, host types, and prices. "
+    "Use the filters and click a neighborhood in the first chart to update the charts below."
+)
 
 @st.cache_data
 def load_data():
@@ -244,8 +247,8 @@ chart3 = (
     .encode(
         x=alt.X(
             "host_size_group:O",
-            sort=order
-            # title="Host Portfolio Size"
+            sort=order,
+            title="Host Portfolio Size"
         ),
         y=alt.Y(
             "price_$:Q",
@@ -258,13 +261,7 @@ chart3 = (
                 domain=order,
                 scheme="blues"
             )
-        ),
-        # tooltip=[
-        #     alt.Tooltip(
-        #         "price_$:Q",
-        #         title="Price"
-        #     )
-        # ]
+        )
     )
     .properties(
         title="Nightly Price Distribution by Host Portfolio",
@@ -288,8 +285,6 @@ dashboard = (
         color="independent"
     )
 )
-
-st.caption("Click a neighborhood in the first chart to update the charts below.")
 
 st.altair_chart(
     dashboard,
