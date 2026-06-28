@@ -21,6 +21,32 @@ top5_neighborhoods = (
 
 plot_df = df[df["neighbourhood_cleansed"].isin(top5_neighborhoods)].copy()
 
+price_min = int(plot_df["price_$"].min())
+price_max = int(plot_df["price_$"].quantile(0.99))
+
+price_range = st.sidebar.slider(
+    "Nightly Price",
+    min_value=price_min,
+    max_value=price_max,
+    value=(price_min, price_max)
+)
+
+room_types = sorted(plot_df["room_type"].dropna().unique())
+
+selected_rooms = st.sidebar.multiselect(
+    "Room Type",
+    room_types,
+    default=room_types
+)
+
+plot_df = plot_df[
+    plot_df["price_$"].between(*price_range)
+]
+
+plot_df = plot_df[
+    plot_df["room_type"].isin(selected_rooms)
+]
+
 neigh_order = top5_neighborhoods
 
 order = [
@@ -40,26 +66,34 @@ neigh_context = {
 
 plot_df["neighborhood_context"] = plot_df["neighbourhood_cleansed"].map(neigh_context)
 
-view_mode = st.radio(
-    "View mode",
-    ["Count", "Percentage"],
-    horizontal=True
-)
+show_percent = st.toggle("Normalize bars", value=False)
 
-y_encoding = (
-    alt.Y("count():Q", title="Number of Listings")
-    if view_mode == "Count"
-    else alt.Y(
+if show_percent:
+    y_encoding = alt.Y(
         "count():Q",
         stack="normalize",
-        title="Share of Listings",
-        axis=alt.Axis(format="%")
+        axis=alt.Axis(format="%"),
+        title="Share of Listings"
     )
+else:
+    y_encoding = alt.Y(
+        "count():Q",
+        title="Number of Listings"
+    )
+
+neighborhood_click = alt.selection_point(
+    fields=["neighbourhood_cleansed"],
+    empty=True
 )
 
-st.write("**Listings by Neighborhood and Host Size**")
+# Chart 1: Listings by Neighborhood and Host Size
 
-chart = (
+st.write("**Listings by Neighborhood and Host Size**")
+st.caption(
+    "Click a neighborhood below to update the other charts."
+)
+
+chart1 = (
     alt.Chart(plot_df)
     .mark_bar()
     .encode(
@@ -86,12 +120,101 @@ chart = (
             alt.Tooltip("neighborhood_context:N", title="About"),
             alt.Tooltip("host_size_group:N", title="Host Portfolio Size"),
             alt.Tooltip("count()", title="Listings")
-        ]
+        ],
+        opacity=alt.condition(neighborhood_click, alt.value(1), alt.value(0.5))
     )
     .properties(
         width=700,
         height=500
     )
+    .add_params(neighborhood_click)
 )
 
-st.altair_chart(chart, use_container_width=True)
+st.altair_chart(chart1, use_container_width=True)
+
+# Chart 2: Superhost Share by Host Portfolio
+
+st.write("**Superhost Share by Host Portfolio**")
+
+df_super = plot_df[plot_df["host_is_superhost"].notna()].copy()
+
+df_super["host_is_superhost"] = df_super["host_is_superhost"].map({
+    True: "Superhost",
+    False: "Not Superhost"
+})
+
+chart2 = (
+    alt.Chart(df_super)
+    .mark_bar()
+    .transform_filter(neighborhood_click)
+    .encode(
+        y=alt.Y(
+            "host_size_group:O",
+            sort=order,
+            title="Host Portfolio Size"
+        ),
+        x=alt.X(
+            "count():Q",
+            stack="normalize",
+            title="Share of Listings"
+        ),
+        color=alt.Color(
+            "host_is_superhost:N",
+            scale=alt.Scale(
+                domain=["Superhost", "Not Superhost"],
+                range=["#1f77b4", "#ff7f0e"]
+            ),
+            title=""
+        ),
+        tooltip=[
+            "host_size_group",
+            "host_is_superhost",
+            alt.Tooltip("count()", title="Listings")
+        ]
+    )
+    .properties(
+        width=700,
+        height=300
+    )
+)
+
+st.altair_chart(chart2, use_container_width=True)
+
+# Chart 3: Price Distribution by Host Portfolio
+
+st.write("**Nightly Price Distribution by Host Portfolio**")
+
+chart3 = (
+    alt.Chart(plot_df)
+    .mark_boxplot(size=45)
+    .transform_filter(neighborhood_click)
+    .encode(
+        x=alt.X(
+            "host_size_group:O",
+            sort=order,
+            title="Host Portfolio Size"
+        ),
+        y=alt.Y(
+            "price_$:Q",
+            title="Nightly Price ($)"
+        ),
+        color=alt.Color(
+            "host_size_group:O",
+            scale=alt.Scale(
+                domain=order,
+                scheme="blues"
+            ),
+            legend=None
+        ),
+        tooltip=[
+            "host_size_group",
+            alt.Tooltip("price_$:Q", title="Price")
+        ]
+    )
+    .properties(
+        width=700,
+        height=350
+    )
+)
+
+st.altair_chart(chart3, use_container_width=True)
