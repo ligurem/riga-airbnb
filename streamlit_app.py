@@ -5,7 +5,7 @@ import pandas as pd
 st.set_page_config(page_title="Riga Airbnb Dashboard", layout="centered")
 st.title("Exploring Riga's Airbnb Market")
 st.write(
-    "Explore how Airbnb listings in Riga vary across neighborhoods, host types, and prices. "
+    "Explore how Airbnb listings in Riga, Latvia vary across neighborhoods, host types, and prices. "
     "Use the filters and click a neighborhood in the first chart to update the charts below."
 )
 
@@ -122,7 +122,8 @@ chart1 = (
         x=alt.X(
             "neighbourhood_cleansed:N",
             sort=neigh_order,
-            title="Neighborhood (Top 5)"
+            title="Neighborhood (Top 5)",
+            axis=alt.Axis(labelAngle=-45)
         ),
         y=y_encoding,
         color=alt.Color(
@@ -248,7 +249,8 @@ chart3 = (
         x=alt.X(
             "host_size_group:O",
             sort=order,
-            title="Host Portfolio Size"
+            title="Host Portfolio Size"            title="Neighborhood (Top 5)",
+            axis=alt.Axis(labelAngle=-45)
         ),
         y=alt.Y(
             "price_$:Q",
