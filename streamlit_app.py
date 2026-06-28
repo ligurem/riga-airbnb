@@ -233,7 +233,7 @@ chart2 = (
     .properties(
         title="Superhost Share by Host Portfolio",
         width=700,
-        height=240
+        height=210
     )
 )
 
