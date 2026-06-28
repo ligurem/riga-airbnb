@@ -239,7 +239,7 @@ chart2 = (
 
 chart3 = (
     alt.Chart(plot_df)
-    .mark_boxplot(size=45, tooltip=False)
+    .mark_boxplot(size=45)
     .transform_filter(neighborhood_click)
     .encode(
         x=alt.X(
@@ -259,12 +259,12 @@ chart3 = (
                 scheme="blues"
             )
         ),
-        tooltip=[
-            alt.Tooltip(
-                "price_$:Q",
-                title="Price"
-            )
-        ]
+        # tooltip=[
+        #     alt.Tooltip(
+        #         "price_$:Q",
+        #         title="Price"
+        #     )
+        # ]
     )
     .properties(
         title="Nightly Price Distribution by Host Portfolio",
