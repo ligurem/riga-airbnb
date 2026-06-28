@@ -2,9 +2,6 @@ import streamlit as st
 import altair as alt
 import pandas as pd
 
-st.title("🚨 IF YOU SEE THIS, THIS FILE IS RUNNING 🚨")
-st.write("Path test version 1")
-
 st.set_page_config(page_title="Riga AirBnb Dashboard", layout="centered")
 st.title("Breakdown of Riga's AirBnB Listings")
 
