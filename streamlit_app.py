@@ -249,7 +249,7 @@ chart3 = (
         x=alt.X(
             "host_size_group:O",
             sort=order,
-            title="Host Portfolio Size"            title="Neighborhood (Top 5)",
+            title="Host Portfolio Size",
             axis=alt.Axis(labelAngle=-45)
         ),
         y=alt.Y(
