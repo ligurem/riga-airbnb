@@ -146,7 +146,7 @@ df_super["host_is_superhost"] = df_super["host_is_superhost"].map({
 chart2 = (
     alt.Chart(df_super)
     .mark_bar()
-    .transform_filter(neighborhood_click)
+    # .transform_filter(neighborhood_click)
     .encode(
         y=alt.Y(
             "host_size_group:O",
@@ -187,7 +187,7 @@ st.write("**Nightly Price Distribution by Host Portfolio**")
 chart3 = (
     alt.Chart(plot_df)
     .mark_boxplot(size=45)
-    .transform_filter(neighborhood_click)
+    # .transform_filter(neighborhood_click)
     .encode(
         x=alt.X(
             "host_size_group:O",
