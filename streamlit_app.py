@@ -165,7 +165,7 @@ chart1 = (
     .properties(
         title="Listings by Neighborhood and Host Size",
         width=700,
-        height=450
+        height=320
     )
     .add_params(neighborhood_click)
 )
@@ -233,7 +233,7 @@ chart2 = (
     .properties(
         title="Superhost Share by Host Portfolio",
         width=700,
-        height=300
+        height=240
     )
 )
 
@@ -243,7 +243,7 @@ chart2 = (
 
 chart3 = (
     alt.Chart(plot_df)
-    .mark_boxplot(size=45)
+    .mark_boxplot(size=35)
     .transform_filter(neighborhood_click)
     .encode(
         x=alt.X(
@@ -268,7 +268,7 @@ chart3 = (
     .properties(
         title="Nightly Price Distribution by Host Portfolio",
         width=700,
-        height=350
+        height=260
     )
 )
 
@@ -281,7 +281,7 @@ dashboard = (
         chart1,
         chart2,
         chart3,
-        spacing=25
+        spacing=15
     )
     .resolve_scale(
         color="independent"
