@@ -188,7 +188,7 @@ df_super["host_is_superhost"] = (
 
 chart2 = (
     alt.Chart(df_super)
-    .mark_bar()
+    .mark_bar(size=35)
     .transform_filter(neighborhood_click)
     .encode(
         y=alt.Y(
@@ -210,8 +210,8 @@ chart2 = (
                     "Not Superhost"
                 ],
                 range=[
-                    "#1f77b4",
-                    "#ff7f0e"
+                    "#ff7f0e",
+                    "#1f77b4"
                 ]
             )
         ),
@@ -281,7 +281,7 @@ dashboard = (
         chart1,
         chart2,
         chart3,
-        spacing=15
+        spacing=20
     )
     .resolve_scale(
         color="independent"
